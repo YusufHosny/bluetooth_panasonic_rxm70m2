@@ -6,7 +6,7 @@
 #include "freertos/queue.h"
 #include "freertos/task.h"
 
-#include "config.h"
+#include "app_config.h"
 #include "buttons.h"
 #include "bt_audio.h"
 
@@ -35,7 +35,6 @@ static const struct
 static const int BTN_COUNT = sizeof(btn_map) / sizeof(btn_map[0]);
 
 // --- ISR ---
-
 static void IRAM_ATTR button_isr_handler(void * arg)
 {
     btn_event_t evt  = { .pin = (int)(intptr_t)arg };
@@ -45,7 +44,6 @@ static void IRAM_ATTR button_isr_handler(void * arg)
 }
 
 // --- task helpers ---
-
 static bool is_button_still_pressed(int pin)
 {
     return gpio_get_level((gpio_num_t)pin) == 0;
@@ -79,7 +77,6 @@ static void button_task(void * pv_params)
 }
 
 // --- GPIO setup ---
-
 static void configure_button_gpio(int pin)
 {
     gpio_config_t cfg = {
@@ -95,7 +92,6 @@ static void configure_button_gpio(int pin)
 }
 
 // --- public API ---
-
 void buttons_init(void)
 {
     s_btn_queue = xQueueCreate(10, sizeof(btn_event_t));

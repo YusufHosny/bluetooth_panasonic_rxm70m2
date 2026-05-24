@@ -6,7 +6,7 @@
 
 #ifdef __cplusplus
 #include "AudioTools.h"
-// set_stream must be called once before any audio_notify_play calls
+
 void audio_notify_set_stream(I2SStream & stream);
 
 extern "C" {

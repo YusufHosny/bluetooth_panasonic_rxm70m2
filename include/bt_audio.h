@@ -9,7 +9,7 @@ extern "C" {
 
 void bt_audio_init(void);
 
-// AVRCP transport controls — sent to the connected source device
+// controls sent to master device
 void bt_audio_pause(void);
 void bt_audio_resume(void);
 void bt_audio_toggle_pause(void);

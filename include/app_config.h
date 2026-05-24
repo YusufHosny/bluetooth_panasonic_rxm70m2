@@ -6,12 +6,12 @@
 #define BT_AUTO_RECONNECT   true
 #define BT_RECONNECT_COUNT  5
 
-// --- I2S DAC pins (defaults: BCK=14, WS=15, DATA=22) ---
+// --- I2S DAC pins ---
 #define I2S_BCLK_PIN        14
 #define I2S_WCLK_PIN        15
 #define I2S_DATA_PIN        22
 
-// --- Button GPIOs (active-low, internal pull-up; change to match wiring) ---
+// --- Button GPIOs ---
 #define BTN_PAUSE_PIN       32
 #define BTN_NEXT_PIN        33
 #define BTN_PREV_PIN        19
@@ -21,6 +21,9 @@
 
 // --- Debounce ---
 #define BTN_DEBOUNCE_MS     50
+
+// --- Onboard LED ---
+#define ONBOARD_LED_PIN     2
 
 // --- Utility ---
 #ifndef forever

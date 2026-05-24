@@ -1,6 +1,8 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
 
+#include "app_config.h"
 #include "bt_audio.h"
 #include "buttons.h"
 

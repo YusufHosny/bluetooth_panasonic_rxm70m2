@@ -4,7 +4,7 @@
 #include "AudioTools.h"
 #include "BluetoothA2DPSink.h"
 
-#include "config.h"
+#include "app_config.h"
 #include "bt_audio.h"
 #include "audio_notify.h"
 #include "sounds.h"
