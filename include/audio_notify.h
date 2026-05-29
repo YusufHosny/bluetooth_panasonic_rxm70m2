@@ -6,8 +6,15 @@
 
 #ifdef __cplusplus
 #include "AudioTools.h"
+#include "app_config.h"
 
-void audio_notify_set_stream(I2SStream & stream);
+#if USE_I2S
+typedef I2SStream AudioOutput_t;
+#elif USE_INTERNAL_DAC
+typedef AnalogAudioStream AudioOutput_t;
+#endif
+
+void audio_notify_set_stream(AudioOutput_t & stream);
 
 extern "C" {
 #endif

@@ -8,19 +8,18 @@
 #include "bt_audio.h"
 
 static const char * TAG = "audio_notify";
+static AudioOutput_t * s_out_stream = nullptr;
 
-static I2SStream * s_i2s_stream = nullptr;
-
-void audio_notify_set_stream(I2SStream & stream)
+void audio_notify_set_stream(AudioOutput_t & stream)
 {
-    s_i2s_stream = &stream;
+    s_out_stream = &stream;
 }
 
 static void decode_and_play_mp3(const uint8_t * data, size_t len)
 {
     MemoryStream mp3_mem(data, len);
     MP3DecoderHelix mp3_dec;
-    EncodedAudioStream decoder(s_i2s_stream, &mp3_dec);
+    EncodedAudioStream decoder(s_out_stream, &mp3_dec);
     StreamCopy copier(decoder, mp3_mem);
 
     decoder.begin();
@@ -33,7 +32,7 @@ static void decode_and_play_mp3(const uint8_t * data, size_t len)
 
 void audio_notify_play(const uint8_t * data, size_t len)
 {
-    if (len == 0 || s_i2s_stream == nullptr)
+    if (len == 0 || s_out_stream == nullptr)
         return;
 
     bt_audio_set_output_active(false);

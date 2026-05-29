@@ -11,23 +11,33 @@
 
 static const char * TAG = "bt_audio";
 
-static I2SStream s_i2s_stream;
+#if USE_I2S
+static I2SStream s_out_stream;
 static BluetoothA2DPSink s_a2dp_sink(s_i2s_stream);
+#elif USE_INTERNAL_DAC
+static AnalogAudioStream s_out_stream;
+static BluetoothA2DPSink s_a2dp_sink(s_out_stream);
+#endif
+
 static bool s_is_playing = false;
 
-// --- I2S setup ---
-
-static void start_i2s_output(void)
+// --- output setup ---
+static void start_output(void)
 {
-    auto cfg = s_i2s_stream.defaultConfig(TX_MODE);
+#if USE_I2S
+    auto cfg = s_out_stream.defaultConfig(TX_MODE);
     cfg.pin_bck  = I2S_BCLK_PIN;
     cfg.pin_ws   = I2S_WCLK_PIN;
     cfg.pin_data = I2S_DATA_PIN;
-    s_i2s_stream.begin(cfg);
+    s_out_stream.begin(cfg);
+#elif USE_INTERNAL_DAC
+    auto cfg = s_out_stream.defaultConfig();
+    cfg.channels = 1; // mono 
+    s_out_stream.begin(cfg);
+#endif
 }
 
 // --- A2DP callbacks ---
-
 static void on_device_connected(void)
 {
     ESP_LOGI(TAG, "device connected");
@@ -65,8 +75,8 @@ static void register_callbacks(void)
 
 void bt_audio_init(void)
 {
-    start_i2s_output();
-    audio_notify_set_stream(s_i2s_stream);
+    start_output();
+    audio_notify_set_stream(s_out_stream);
     register_callbacks();
     s_a2dp_sink.set_auto_reconnect(BT_AUTO_RECONNECT, BT_RECONNECT_COUNT);
     s_a2dp_sink.start(BT_DEVICE_NAME);
