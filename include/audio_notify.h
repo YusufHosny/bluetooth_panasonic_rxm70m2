@@ -8,13 +8,14 @@
 #include "AudioTools.h"
 #include "app_config.h"
 
-#if USE_I2S
+#if USE_I2S_OUT
 typedef I2SStream AudioOutput_t;
-#elif USE_INTERNAL_DAC
+#elif USE_INTERNAL_DAC_OUT
 typedef AnalogAudioStream AudioOutput_t;
 #endif
 
 void audio_notify_set_stream(AudioOutput_t & stream);
+void audio_notify_init(void);
 
 extern "C" {
 #endif

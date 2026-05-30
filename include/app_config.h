@@ -2,8 +2,11 @@
 #define CONFIG_H
 
 // --- Config ---
-#define USE_I2S 0
-#define USE_INTERNAL_DAC !USE_I2S
+#define USE_I2S_OUT 0
+#define USE_INTERNAL_DAC_OUT !USE_I2S_OUT
+
+#define DEBUG_NO_CONTROL_AUDIO 1
+
 
 // --- Bluetooth ---
 #define BT_DEVICE_NAME      "Panasonic RX-M70M2"
