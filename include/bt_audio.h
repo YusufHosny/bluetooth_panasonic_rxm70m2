@@ -24,8 +24,6 @@ void bt_audio_enter_pairing(void);
 bool bt_audio_is_connected(void);
 bool bt_audio_is_playing(void);
 
-// Used by audio_notify to silence A2DP output around a notification
-void bt_audio_set_output_active(bool active);
 
 #ifdef __cplusplus
 }

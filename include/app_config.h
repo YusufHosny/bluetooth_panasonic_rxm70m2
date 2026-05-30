@@ -6,7 +6,7 @@
 #define USE_INTERNAL_DAC_OUT !USE_I2S_OUT
 
 #define DEBUG_NO_CONTROL_AUDIO 0
-
+#define DEBUG_PLAY_PAIR_AUDIO_ON_STARTUP 1
 
 // --- Bluetooth ---
 #define BT_DEVICE_NAME      "Panasonic RX-M70M2"

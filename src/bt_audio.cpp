@@ -13,12 +13,11 @@ static const char * TAG = "bt_audio";
 
 #if USE_I2S_OUT
 static I2SStream s_out_stream;
-static BluetoothA2DPSink s_a2dp_sink(s_i2s_stream);
 #elif USE_INTERNAL_DAC_OUT
 static AnalogAudioStream s_out_stream;
-static BluetoothA2DPSink s_a2dp_sink(s_out_stream);
 #endif
 
+static BluetoothA2DPSink s_a2dp_sink(s_out_stream);
 static bool s_is_playing = false;
 
 // --- output setup ---
@@ -32,6 +31,8 @@ static void start_output(void)
     s_out_stream.begin(cfg);
 #elif USE_INTERNAL_DAC_OUT
     auto cfg = s_out_stream.defaultConfig();
+    cfg.channels = 2;
+    cfg.sample_rate = 44100;
     s_out_stream.begin(cfg);
 #endif
 }
@@ -81,6 +82,12 @@ void bt_audio_init(void)
     s_a2dp_sink.set_mono_downmix(true);
     s_a2dp_sink.set_auto_reconnect(BT_AUTO_RECONNECT, BT_RECONNECT_COUNT);
     s_a2dp_sink.start(BT_DEVICE_NAME);
+
+#if DEBUG_PLAY_PAIR_AUDIO_ON_STARTUP
+    delay(5000);
+    audio_notify_play(disconnect_sound_data, disconnect_sound_len);
+#endif
+
     ESP_LOGI(TAG, "started as '%s'", BT_DEVICE_NAME);
 }
 
@@ -138,10 +145,4 @@ bool bt_audio_is_playing(void)
     return s_is_playing;
 }
 
-void bt_audio_set_output_active(bool active)
-{
-    if (s_a2dp_sink.get_output() == nullptr)
-        return;
-    s_a2dp_sink.get_output()->set_output_active(active);
-}
 
