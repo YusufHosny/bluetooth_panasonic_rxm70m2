@@ -32,8 +32,6 @@ static void start_output(void)
     s_out_stream.begin(cfg);
 #elif USE_INTERNAL_DAC_OUT
     auto cfg = s_out_stream.defaultConfig();
-    cfg.sample_rate = 44100;
-    cfg.channels    = 1;
     s_out_stream.begin(cfg);
 #endif
 }
@@ -80,6 +78,7 @@ void bt_audio_init(void)
     audio_notify_set_stream(s_out_stream);
     audio_notify_init();
     register_callbacks();
+    s_a2dp_sink.set_mono_downmix(true);
     s_a2dp_sink.set_auto_reconnect(BT_AUTO_RECONNECT, BT_RECONNECT_COUNT);
     s_a2dp_sink.start(BT_DEVICE_NAME);
     ESP_LOGI(TAG, "started as '%s'", BT_DEVICE_NAME);

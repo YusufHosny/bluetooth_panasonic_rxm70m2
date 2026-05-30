@@ -5,7 +5,7 @@
 #define USE_I2S_OUT 0
 #define USE_INTERNAL_DAC_OUT !USE_I2S_OUT
 
-#define DEBUG_NO_CONTROL_AUDIO 1
+#define DEBUG_NO_CONTROL_AUDIO 0
 
 
 // --- Bluetooth ---
