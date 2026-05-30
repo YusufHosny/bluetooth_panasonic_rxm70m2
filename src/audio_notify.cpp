@@ -9,6 +9,7 @@
 
 #include "app_config.h"
 #include "audio_notify.h"
+#include "bt_audio.h"
 
 static const char * TAG = "audio_notify";
 
@@ -42,7 +43,9 @@ static void audio_notify_task(void * pv)
     {
         if (xQueueReceive(s_clip_queue, &clip, portMAX_DELAY) != pdTRUE)
             continue;
+        bt_audio_set_output_active(false);
         decode_and_play_mp3(clip.data, clip.len);
+        bt_audio_set_output_active(true);
     }
     vTaskDelete(NULL);
 }

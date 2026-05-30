@@ -13,11 +13,36 @@ static const char * TAG = "bt_audio";
 
 #if USE_I2S_OUT
 static I2SStream s_out_stream;
-#elif USE_INTERNAL_DAC_OUT
-static AnalogAudioStream s_out_stream;
-#endif
-
 static BluetoothA2DPSink s_a2dp_sink(s_out_stream);
+#elif USE_INTERNAL_DAC_OUT
+static AnalogAudioStream s_dac_out;
+
+// Sits between A2DP and the DAC. Muting drops A2DP writes without touching
+// the DAC driver, so audio_notify can write to s_dac_out concurrently.
+// begin()/end() are no-ops so A2DP's set_output_active can't tear down the DAC.
+class GatedStream : public AudioStream {
+public:
+    GatedStream(AudioStream & out) : _out(out) {}
+    size_t write(const uint8_t * data, size_t len) override {
+        if (_muted) return len;
+        return _out.write(data, len);
+    }
+    bool   begin()   override { return true; }
+    void   end()     override {}
+    void   setAudioInfo(AudioInfo info) override { _out.setAudioInfo(info); }
+    AudioInfo audioInfo()      override { return _out.audioInfo(); }
+    int    available()         override { return 0; }
+    int    read()              override { return -1; }
+    int    peek()              override { return -1; }
+    void   set_muted(bool m)            { _muted = m; }
+private:
+    AudioStream & _out;
+    volatile bool _muted = false;
+};
+
+static GatedStream        s_out_stream(s_dac_out);
+static BluetoothA2DPSink  s_a2dp_sink(s_out_stream);
+#endif
 static bool s_is_playing = false;
 
 // --- output setup ---
@@ -30,10 +55,10 @@ static void start_output(void)
     cfg.pin_data = I2S_DATA_PIN;
     s_out_stream.begin(cfg);
 #elif USE_INTERNAL_DAC_OUT
-    auto cfg = s_out_stream.defaultConfig();
-    cfg.channels = 2;
+    auto cfg = s_dac_out.defaultConfig();
     cfg.sample_rate = 44100;
-    s_out_stream.begin(cfg);
+    cfg.channels    = 2;
+    s_dac_out.begin(cfg);
 #endif
 }
 
@@ -76,7 +101,11 @@ static void register_callbacks(void)
 void bt_audio_init(void)
 {
     start_output();
+#if USE_INTERNAL_DAC_OUT
+    audio_notify_set_stream(s_dac_out);
+#else
     audio_notify_set_stream(s_out_stream);
+#endif
     audio_notify_init();
     register_callbacks();
     s_a2dp_sink.set_mono_downmix(true);
@@ -145,4 +174,9 @@ bool bt_audio_is_playing(void)
     return s_is_playing;
 }
 
-
+void bt_audio_set_output_active(bool active)
+{
+#if USE_INTERNAL_DAC_OUT
+    s_out_stream.set_muted(!active);
+#endif
+}

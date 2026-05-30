@@ -24,6 +24,9 @@ void bt_audio_enter_pairing(void);
 bool bt_audio_is_connected(void);
 bool bt_audio_is_playing(void);
 
+// Gates A2DP writes to the DAC without closing the stream
+void bt_audio_set_output_active(bool active);
+
 
 #ifdef __cplusplus
 }
