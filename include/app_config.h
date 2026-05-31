@@ -14,17 +14,22 @@
 #define BT_RECONNECT_COUNT  5
 
 // --- I2S DAC pins ---
+// only used with USE_I2S_OUT
 #define I2S_BCLK_PIN        5
 #define I2S_WCLK_PIN        18
 #define I2S_DATA_PIN        19
 
+// --- DAC OUT PIN ---
+// cant be changed
+#define DAC_OUT_PIN         25
+
 // --- Button GPIOs ---
 #define BTN_PAUSE_PIN       2
-#define BTN_NEXT_PIN        23
-#define BTN_PREV_PIN        19
-#define BTN_VOL_UP_PIN      25
-#define BTN_VOL_DN_PIN      27
-#define BTN_PAIR_PIN        12
+#define BTN_NEXT_PIN        16
+#define BTN_PREV_PIN        5
+#define BTN_VOL_UP_PIN      14
+#define BTN_VOL_DN_PIN      13
+#define BTN_PAIR_PIN        23
 
 // --- Debounce ---
 #define BTN_DEBOUNCE_MS     50
