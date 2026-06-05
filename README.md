@@ -1,6 +1,6 @@
 # Panasonic RX-M70M2 Bluetooth Speaker
 
-ESP32 firmware that turns a Panasonic RX-M70M2 cassette player/radio into a Bluetooth A2DP speaker, outputting audio through the radio's existing speaker via the ESP32's onboard DAC.
+ESP32 firmware that turns a Panasonic RX-M70M2 cassette player/radio into a Bluetooth A2DP speaker, outputting audio through the radio's existing speaker. Configured to use the ESP32's onboard DAC by default; the audio output can be switched to I2S or other backends supported by [arduino-audio-tools](https://github.com/pschatzmann/arduino-audio-tools) via `app_config.h`.
 
 ![Panasonic RX-M70M2](docs/images/panasonic-original.jpg)
 
@@ -12,9 +12,9 @@ More detail in the [build blog post](https://www.yusufhussein.com/blog/making-a-
 
 ### Components
 
-- Original ESP32 dev board (onboard DAC required — modules without DAC won't work)
+- ESP32 dev board
 - 6 momentary push buttons (active-low, pulled up internally)
-- 10kΩ resistor + coupling capacitor on the DAC output line
+- 10kΩ resistor + coupling capacitor on the audio output lines
 - Wires, protoboard
 
 ### Wiring
